@@ -20,7 +20,7 @@ final class AddCustomContext
 
     public function __construct(ScoutApmAgent $agent, FilteredLogLevelDecorator $logger)
     {
-        $this->agent  = $agent;
+        $this->agent = $agent;
         $this->logger = $logger;
     }
 
@@ -36,11 +36,11 @@ final class AddCustomContext
             if ($addParamsEnabled) {
                 $this->agent->addContext('request_body', json_encode($request->input()));
                 foreach ($request->input() as $key => $value) {
-                    $this->agent->addContext('params.' . $key, json_encode($value));
+                    $this->agent->addContext('params.'.$key, json_encode($value));
                 }
             }
         } catch (Throwable $e) {
-            $this->logger->debug('SendRequestToScout failed: ' . $e->getMessage(), ['exception' => $e]);
+            $this->logger->debug('SendRequestToScout failed: '.$e->getMessage(), ['exception' => $e]);
         }
 
         return $next($request);

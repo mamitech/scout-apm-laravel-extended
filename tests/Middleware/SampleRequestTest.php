@@ -10,7 +10,7 @@ use Scoutapm\ScoutApmAgent;
 uses(\phpmock\phpunit\PHPMock::class);
 
 it('samples request when random hits', function () {
-    $rand = $this->getFunctionMock("Mamitech\ScoutApmLaravelExtended\Middleware", "rand");
+    $rand = $this->getFunctionMock("Mamitech\ScoutApmLaravelExtended\Middleware", 'rand');
     $rand->expects($this->once())->willReturn(1);
     $mockAgent = Mockery::mock(ScoutApmAgent::class);
     $mockAgent->shouldReceive('connect');
@@ -29,12 +29,12 @@ it('samples request when random hits', function () {
             return $expectedResponse;
         }
     );
-    
+
     expect($expectedResponse === $response)->toBeTrue();
 });
 
 it('doesn\'t sample request when random doesn\'t hit', function () {
-    $rand = $this->getFunctionMock("Mamitech\ScoutApmLaravelExtended\Middleware", "rand");
+    $rand = $this->getFunctionMock("Mamitech\ScoutApmLaravelExtended\Middleware", 'rand');
     $rand->expects($this->once())->willReturn(6);
     $mockAgent = Mockery::mock(ScoutApmAgent::class);
     $mockAgent->shouldNotReceive('connect');
@@ -44,7 +44,7 @@ it('doesn\'t sample request when random doesn\'t hit', function () {
         $mockLogger,
         'debug'
     );
-    
+
     $expectedResponse = new Response();
     $sampleRequestMiddleware = new SampleRequest($mockAgent, $filteredLogLevel);
     $response = $sampleRequestMiddleware->handle(
@@ -53,6 +53,6 @@ it('doesn\'t sample request when random doesn\'t hit', function () {
             return $expectedResponse;
         }
     );
-    
+
     expect($expectedResponse === $response)->toBeTrue();
 });

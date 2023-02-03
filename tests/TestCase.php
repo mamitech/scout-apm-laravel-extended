@@ -3,8 +3,8 @@
 namespace Mamitech\ScoutApmLaravelExtended\Tests;
 
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Orchestra\Testbench\TestCase as Orchestra;
 use Mamitech\ScoutApmLaravelExtended\ScoutApmLaravelExtendedServiceProvider;
+use Orchestra\Testbench\TestCase as Orchestra;
 
 class TestCase extends Orchestra
 {

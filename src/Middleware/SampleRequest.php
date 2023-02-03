@@ -20,7 +20,7 @@ final class SampleRequest
 
     public function __construct(ScoutApmAgent $agent, FilteredLogLevelDecorator $logger)
     {
-        $this->agent  = $agent;
+        $this->agent = $agent;
         $this->logger = $logger;
     }
 
@@ -40,8 +40,9 @@ final class SampleRequest
                 $this->logger->debug('SendRequestToScout skipped by sampling');
             }
         } catch (Throwable $e) {
-            $this->logger->debug('SendRequestToScout failed: ' . $e->getMessage(), ['exception' => $e]);
+            $this->logger->debug('SendRequestToScout failed: '.$e->getMessage(), ['exception' => $e]);
         }
+
         return $next($request);
     }
 }
