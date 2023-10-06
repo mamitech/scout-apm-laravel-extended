@@ -16,4 +16,11 @@ class ScoutApmLaravelExtendedServiceProvider extends ServiceProvider
         $kernel->prependMiddleware(AddCustomContext::class);
         $kernel->prependMiddleware(SampleRequest::class);
     }
+
+    public function register()
+    {
+        $this->mergeConfigFrom(
+            __DIR__.'/../config/scout-apm-laravel-extended.php', 'scout-apm-laravel-extended'
+        );
+    }
 }

@@ -32,7 +32,7 @@ final class SampleRequest
     public function handle(Request $request, Closure $next)
     {
         try {
-            $samplingPer = (int) env('SCOUT_SAMPLING_PER', 10);
+            $samplingPer = (int) config('scout-apm-laravel-extended.sampling_per', 10);
             if (rand(1, $samplingPer) === 1) {
                 $this->agent->connect();
             } else {
