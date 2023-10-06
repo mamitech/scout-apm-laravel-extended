@@ -32,7 +32,7 @@ final class AddCustomContext
     public function handle(Request $request, Closure $next)
     {
         try {
-            $addParamsEnabled = env('SCOUT_CUSTOM_CONTEXT_ENABLED', false);
+            $addParamsEnabled = config('scout-apm-laravel-extended.custom_context_enabled', false);
             if ($addParamsEnabled) {
                 $this->agent->addContext('request_body', json_encode($request->input()));
                 foreach ($request->input() as $key => $value) {

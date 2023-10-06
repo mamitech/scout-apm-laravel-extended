@@ -8,7 +8,7 @@ use Scoutapm\Logger\FilteredLogLevelDecorator;
 use Scoutapm\ScoutApmAgent;
 
 it('adds custom context when enabled', function () {
-    putenv('SCOUT_CUSTOM_CONTEXT_ENABLED=true');
+    config(['scout-apm-laravel-extended.custom_context_enabled' => true]);
 
     $request = new Request();
     $postBody = [
@@ -39,7 +39,7 @@ it('adds custom context when enabled', function () {
 });
 
 it('doesn\'t add custom context when disabled', function () {
-    putenv('SCOUT_CUSTOM_CONTEXT_ENABLED=false');
+    config(['scout-apm-laravel-extended.custom_context_enabled' => false]);
 
     $request = new Request();
     $postBody = [
