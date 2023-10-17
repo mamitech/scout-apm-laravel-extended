@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Mamitech\ScoutApmLaravelExtended\Middleware\SampleRequest;
+use Mamitech\ScoutApmLaravelExtended\PHPHelper;
 use Psr\Log\LoggerInterface;
 use Scoutapm\Logger\FilteredLogLevelDecorator;
 use Scoutapm\ScoutApmAgent;
@@ -10,8 +11,7 @@ use Scoutapm\ScoutApmAgent;
 uses(\phpmock\phpunit\PHPMock::class);
 
 it('samples request when random hits', function () {
-    $rand = $this->getFunctionMock("Mamitech\ScoutApmLaravelExtended\Middleware", 'rand');
-    $rand->expects($this->once())->willReturn(1);
+    config(['scout-apm-laravel-extended.sampling_per' => 1]);
     $mockAgent = Mockery::mock(ScoutApmAgent::class);
     $mockAgent->shouldReceive('connect');
     $mockLogger = Mockery::mock(LoggerInterface::class);
@@ -22,7 +22,7 @@ it('samples request when random hits', function () {
     );
 
     $expectedResponse = new Response();
-    $sampleRequestMiddleware = new SampleRequest($mockAgent, $filteredLogLevel);
+    $sampleRequestMiddleware = new SampleRequest($mockAgent, $filteredLogLevel, new PHPHelper());
     $response = $sampleRequestMiddleware->handle(
         new Request(),
         static function () use ($expectedResponse) {
@@ -34,8 +34,8 @@ it('samples request when random hits', function () {
 });
 
 it('doesn\'t sample request when random doesn\'t hit', function () {
-    $rand = $this->getFunctionMock("Mamitech\ScoutApmLaravelExtended\Middleware", 'rand');
-    $rand->expects($this->once())->willReturn(6);
+    $mockPHPHelper = Mockery::mock(PHPHelper::class);
+    $mockPHPHelper->shouldReceive('rand')->andReturn(6);
     $mockAgent = Mockery::mock(ScoutApmAgent::class);
     $mockAgent->shouldNotReceive('connect');
     $mockLogger = Mockery::mock(LoggerInterface::class);
@@ -46,7 +46,7 @@ it('doesn\'t sample request when random doesn\'t hit', function () {
     );
 
     $expectedResponse = new Response();
-    $sampleRequestMiddleware = new SampleRequest($mockAgent, $filteredLogLevel);
+    $sampleRequestMiddleware = new SampleRequest($mockAgent, $filteredLogLevel, $mockPHPHelper);
     $response = $sampleRequestMiddleware->handle(
         new Request(),
         static function () use ($expectedResponse) {
