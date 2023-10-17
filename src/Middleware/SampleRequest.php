@@ -6,6 +6,7 @@ namespace Mamitech\ScoutApmLaravelExtended\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Mamitech\ScoutApmLaravelExtended\PHPHelper;
 use Scoutapm\Logger\FilteredLogLevelDecorator;
 use Scoutapm\ScoutApmAgent;
 use Throwable;
@@ -18,10 +19,14 @@ final class SampleRequest
     /** @var FilteredLogLevelDecorator */
     private $logger;
 
-    public function __construct(ScoutApmAgent $agent, FilteredLogLevelDecorator $logger)
+    /** @var PHPHelper */
+    private $phpHelper;
+
+    public function __construct(ScoutApmAgent $agent, FilteredLogLevelDecorator $logger, PHPHelper $phpHelper)
     {
         $this->agent = $agent;
         $this->logger = $logger;
+        $this->phpHelper = $phpHelper;
     }
 
     /**
@@ -33,7 +38,7 @@ final class SampleRequest
     {
         try {
             $samplingPer = (int) config('scout-apm-laravel-extended.sampling_per', 10);
-            if (rand(1, $samplingPer) === 1) {
+            if ($this->phpHelper->rand(1, $samplingPer) === 1) {
                 $this->agent->connect();
             } else {
                 $this->agent->ignore();

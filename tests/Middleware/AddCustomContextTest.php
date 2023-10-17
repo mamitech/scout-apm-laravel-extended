@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 use Mamitech\ScoutApmLaravelExtended\Middleware\AddCustomContext;
+use Mamitech\ScoutApmLaravelExtended\PHPHelper;
 use Psr\Log\LoggerInterface;
 use Scoutapm\Logger\FilteredLogLevelDecorator;
 use Scoutapm\ScoutApmAgent;
@@ -27,7 +28,7 @@ it('adds custom context when enabled', function () {
     );
 
     $expectedResponse = new Response();
-    $addCustomContextMiddleware = new AddCustomContext($mockAgent, $filteredLogLevel);
+    $addCustomContextMiddleware = new AddCustomContext($mockAgent, $filteredLogLevel, new PHPHelper());
     $response = $addCustomContextMiddleware->handle(
         $request,
         static function () use ($expectedResponse) {
@@ -57,7 +58,7 @@ it('doesn\'t add custom context when disabled', function () {
     );
 
     $expectedResponse = new Response();
-    $addCustomContextMiddleware = new AddCustomContext($mockAgent, $filteredLogLevel);
+    $addCustomContextMiddleware = new AddCustomContext($mockAgent, $filteredLogLevel, new PHPHelper());
     $response = $addCustomContextMiddleware->handle(
         $request,
         static function () use ($expectedResponse) {
